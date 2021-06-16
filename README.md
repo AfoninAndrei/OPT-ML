@@ -1,6 +1,9 @@
-# Learning to learn by gradient descent by gradient descent [[PDF](https://arxiv.org/pdf/1606.04474v2.pdf)]
+# Can we learn gradients by Hamiltonian Neural Networks
 
-This is a Pytorch version of the LSTM-based meta optimizer.
+
+<!-- # Learning to learn by gradient descent by gradient descent [[PDF](https://arxiv.org/pdf/1606.04474v2.pdf)] -->
+
+<!-- This is a Pytorch version of the LSTM-based meta optimizer.
 
 - [x] For Quadratic functions
 - [x] For Mnist
@@ -14,17 +17,17 @@ This is a Pytorch version of the LSTM-based meta optimizer.
 This repository has been tested on GTX 1080Ti.
 
 ## Installation
-* Clone this repo:
+* Clone this repo: -->
 ```bash
-git clone https://github.com/chenwydj/learning-to-learn-by-gradient-descent-by-gradient-descent.git
-cd learning-to-learn-by-gradient-descent-by-gradient-descent
+# git clone https://github.com/chenwydj/learning-to-learn-by-gradient-descent-by-gradient-descent.git
+# cd learning-to-learn-by-gradient-descent-by-gradient-descent
 ```
-* Install dependencies:
+<!-- * Install dependencies: -->
 ```bash
-pip install requirements.txt
+# pip install requirements.txt
 ```
 
-## Usage
+<!-- ## Usage
 * To reproduce the paper: simply go through the notebook `Grad_buffer.ipynb`. Note that some images not properly loaded in browser will show-up in downloaded local version.
 * To implement your own Learning-to-Optimize works: please feel free to use `meta_module.py`
     - `from meta_module import *`
@@ -40,4 +43,4 @@ This comes the reason why the `meta_module.py` is provided. The core class is `M
 
 ## Acknowledgement
 * Original L2O code from [AdrienLE/learning_by_grad_by_grad_repro](https://github.com/AdrienLE/learning_by_grad_by_grad_repro).
-* Meta modules from [danieltan07/learning-to-reweight-examples](https://github.com/danieltan07/learning-to-reweight-examples).
+* Meta modules from [danieltan07/learning-to-reweight-examples](https://github.com/danieltan07/learning-to-reweight-examples). -->
