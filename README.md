@@ -1,4 +1,4 @@
-# Can we learn gradients by Hamiltonian Neural Networks
+# Can we learn gradients by Hamiltonian Neural Networks?
 
 
 <!-- # Learning to learn by gradient descent by gradient descent [[PDF](https://arxiv.org/pdf/1606.04474v2.pdf)] -->
@@ -16,17 +16,18 @@
 
 This repository has been tested on GTX 1080Ti.
 
-## Installation
+<!-- ## Installation
 * Clone this repo: -->
 ```bash
 # git clone https://github.com/chenwydj/learning-to-learn-by-gradient-descent-by-gradient-descent.git
 # cd learning-to-learn-by-gradient-descent-by-gradient-descent
-```
+``` -->
 <!-- * Install dependencies: -->
 ```bash
+<!-- 
 # pip install requirements.txt
 ```
-
+-->
 <!-- ## Usage
 * To reproduce the paper: simply go through the notebook `Grad_buffer.ipynb`. Note that some images not properly loaded in browser will show-up in downloaded local version.
 * To implement your own Learning-to-Optimize works: please feel free to use `meta_module.py`
