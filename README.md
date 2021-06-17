@@ -39,10 +39,8 @@ pip install requirements.txt
 
 In fact, gradient descent is fundamentally a **sequence** of updates (from the output layer of the neural net back to the input), in between which a **state** must be stored. Thus we can think of an optimizer as a ODE-Net (or RNN).
 The loss of the optimizer is the sum (weights are set to 1 in our experiments) of the losses of the optimizee as it learns. 
-$$\mathcal{L}(\phi) = \mathbb{E}_f \left[ \sum_{t=1}^T w_t f(\theta_t) \right]$$
-where
-$$\theta_{t+1} = \theta_t + g_t$$
-$$\begin{bmatrix} g_t \\ h_{t+1} \end{bmatrix} = m(\nabla_t, h_t, \phi)$$
+
+<img src="figs/loss.png" width="400" />
 
 $f$ is the *optimizee* function, and $\theta_t$ is its parameters at time $t$.
 $m$ is the *optimizer* function, $\phi$ is its parameters. $h_t$ is its state at time $t$. $g_t$ is the update it outputs at time $t$.
