@@ -1,3 +1,6 @@
+# Here, we define the target tasks for optimizees
+# Cde is based on: 
+# https://github.com/chenwydj/learning-to-learn-by-gradient-descent-by-gradient-descent
 import os
 import numpy as np
 import torch
@@ -5,9 +8,12 @@ from torch import nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 import torchvision
+from torchvision import datasets
 from helpers import w
 
-
+# Our optimizer is supposed to find a 10-element vector, when multiplied by a 10x10 matrix,
+# is as close as possible to a 10-element vector. Both vector and matrix are generated randomly 
+# from the normal distibution. The error is simply the squared error.
 class QuadraticLoss:
     def __init__(self, **kwargs):
         self.W = w(Variable(torch.randn(10, 10)))
@@ -15,8 +21,10 @@ class QuadraticLoss:
         
     def get_loss(self, theta):
         return torch.sum((self.W.matmul(theta) - self.y)**2)
-    
-class MNISTLoss:
+
+# Basically, it allows sampling batches for training from MNIST dataset
+# The loss function is a negative log-likelihood computed in MNISTNet (optimizee.py) 
+class MNISTLoss: 
     def __init__(self, training=True):
         try:
             os.mkdir('data')

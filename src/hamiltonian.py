@@ -1,3 +1,4 @@
+# Here, we define the physics that is used for HNN optimizer
 import torch
 from torch import nn
 
@@ -10,7 +11,8 @@ class Hamiltonian(nn.Module):
         self.D = nn.Linear(2*input_dim, 2*input_dim, bias=False)
         self.L = nn.Linear(input_dim, input_dim)
 
-    def forward(self, t, x):
+    def forward(self, x):
+        # Check the report for details about questions below
         with torch.enable_grad():
             q, dev_q = torch.chunk(x, 2, dim=-1)
             g = self.g(q)

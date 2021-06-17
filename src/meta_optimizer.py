@@ -1,3 +1,4 @@
+# This module defines model-based optimizers used in this project
 import numpy as np
 import torch
 from torch import nn
@@ -5,7 +6,8 @@ from torch.autograd import Variable
 from hamiltonian import Hamiltonian
 from helpers import w
 
-
+# Optimizer_LSTM is taken from https://github.com/chenwydj/learning-to-learn-by-gradient-descent-by-gradient-descent
+# Optimizer_HNN is adapted based on this code
 class Optimizer_LSTM(nn.Module):
     def __init__(self, preproc=False, hidden_sz=20, preproc_factor=10.0):
         super().__init__()
@@ -22,12 +24,9 @@ class Optimizer_LSTM(nn.Module):
         
     def forward(self, inp, hidden, cell):
         if self.preproc:
-            # Implement preproc described in Appendix A
-            
-            # Note: we do all this work on tensors, which means
-            # the gradients won't propagate through inp. This
-            # should be ok because the algorithm involves
-            # making sure that inp is already detached.
+            # Different input coordinates can have very different magnitudes, 
+            # especially with neural networks. To handle it, we have to preprocess
+            # inputs as in Appendix A: https://arxiv.org/pdf/1606.04474.pdf  
             inp = inp.data
             inp2 = w(torch.zeros(inp.size()[0], 2))
             keep_grads = (torch.abs(inp) >= self.preproc_threshold).squeeze()
@@ -47,9 +46,11 @@ class Optimizer_HNN(nn.Module):
         if preproc:
             gdefunc = Hamiltonian(2)
             self.output = nn.Linear(4, 1, bias=False)
+            self.output1 = nn.Linear(4, 1)
         else:
             gdefunc = Hamiltonian(1)
             self.output = nn.Linear(2, 1, bias=False)
+            self.output1 = nn.Linear(2, 1)
 
         self.gde = gdefunc
         self.preproc = preproc
@@ -58,12 +59,10 @@ class Optimizer_HNN(nn.Module):
         
     def forward(self, inp):
         if self.preproc:
-            # Implement preproc described in Appendix A
+            # Different input coordinates can have very different magnitudes, 
+            # especially with neural networks. To handle it, we have to preprocess
+            # inputs as in Appendix A: https://arxiv.org/pdf/1606.04474.pdf            
             inp_, dev_inp = torch.chunk(inp, 2, dim=-1)
-            # Note: we do all this work on tensors, which means
-            # the gradients won't propagate through inp. This
-            # should be ok because the algorithm involves
-            # making sure that inp is already detached.
             def preprocess(inp):
                 inp = inp.data
                 inp2 = w(torch.zeros(inp.size()[0], 2))
@@ -75,11 +74,11 @@ class Optimizer_HNN(nn.Module):
                 inp2[:, 1][~keep_grads] = (float(np.exp(self.preproc_factor)) * inp[~keep_grads]).squeeze()
                 inp = w(Variable(inp2))
                 return inp
+            # Generalized coordinates and velocities   
             inp_, dev_inp = preprocess(inp_), preprocess(dev_inp)
             inp = torch.cat((inp_, dev_inp), dim=-1)
-        #h = self.gde(inp)
-        # print(h.shape)
-        h = self.gde(t=1, x=inp)
-        h[:, 1] = inp[:, 0]
-        # print(h.shape)
-        return self.output(h)
+        # Apply Hamiltonian Neural Network
+        h = self.gde(inp)
+        deriv = self.output1(h)
+        index = int(h.shape[-1]/2)
+        return self.output(torch.cat((h[:, :index], inp[:, :index]), dim=-1)), deriv

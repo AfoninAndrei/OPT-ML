@@ -1,3 +1,4 @@
+# It contains some helper functions which is used in the implementation
 import functools
 import torch
 from torch.autograd import Variable
