@@ -35,6 +35,31 @@ pip install requirements.txt
 * To reproduce the results: simply go through `main.ipynb`. 
 * All implementations are in `src`.
 
+## Method
+
+In fact, gradient descent is fundamentally a **sequence** of updates (from the output layer of the neural net back to the input), in between which a **state** must be stored. Thus we can think of an optimizer as a ODE-Net (or RNN).
+The loss of the optimizer is the sum (weights are set to 1 in our experiments) of the losses of the optimizee as it learns. 
+$$\mathcal{L}(\phi) = \mathbb{E}_f \left[ \sum_{t=1}^T w_t f(\theta_t) \right]$$
+where
+$$\theta_{t+1} = \theta_t + g_t$$
+$$\begin{bmatrix} g_t \\ h_{t+1} \end{bmatrix} = m(\nabla_t, h_t, \phi)$$
+
+$f$ is the *optimizee* function, and $\theta_t$ is its parameters at time $t$.
+$m$ is the *optimizer* function, $\phi$ is its parameters. $h_t$ is its state at time $t$. $g_t$ is the update it outputs at time $t$.
+
+The plan is thus to use gradient descent on $\phi$ in order to minimize $\mathcal{L}(\phi)$, which should give us an optimizer that is capable of optimizing $f$ efficiently.
+
+As the [paper](https://arxiv.org/pdf/1606.04474.pdf) mentions, it is important that the gradients in dashed lines in the figure below are **not** propagated during gradient descent.
+
+<img src="figs/backprop.png" width="400" />
+
+Basically this is nothing we wouldn't expect: the loss of the optimizer neural net is simply the average training loss of the optimizee as it is trained by the optimizer. The optimizer takes in the gradient of the current coordinate of the optimizee as well as its previous state, and outputs a suggested update that we hope will reduce the optimizee's loss as fast as possible.
+
+Optimization is done coordinatewise such that to optimize each parameter by its own state. Any momentum or energy term used in the optimization is based on each parameter's own history, independent on others. Each parameter's optimization state is not shared across other coordinates.
+The precondition assumed, is that all parameters share the same weights in a model-based optimizer.
+
+In our approach, the role of the optimizer is given to a Hamiltonian Neural Network which is presented in figure below:
+
 ## Acknowledgement
 * Some parts of the code were taken from here: [chenwydj/learning-to-learn-by-gradient-descent-by-gradient](https://github.com/chenwydj/learning-to-learn-by-gradient-descent-by-gradient-descent).
 * The idea of the project has been inspired by [Learning to learn by gradient descent by gradient descent](https://arxiv.org/pdf/1606.04474.pdf) and [Dissipative SymODEN](https://arxiv.org/pdf/2002.08860.pdf)
