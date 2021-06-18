@@ -37,7 +37,7 @@ pip install requirements.txt
 
 ## Method
 
-In fact, gradient descent is fundamentally a **sequence** of updates (from the output layer of the neural net back to the input), in between which a **state** must be stored. Thus we can think of an optimizer as a ODE-Net (or RNN).
+In fact, gradient descent is fundamentally a **sequence** of updates (from the output layer of the neural net back to the input), in between which a **state** must be stored. Thus we can think of an optimizer as a simple feedforward network (or RNN, etc.) that gives us nest update each iteration. 
 The loss of the optimizer is the sum (weights are set to 1 in our experiments) of the losses of the optimizee as it learns. 
 
 <img src="figs/loss.png" width="600" />
@@ -51,7 +51,6 @@ As the [paper](https://arxiv.org/pdf/1606.04474.pdf) mentions, it is important t
 Basically this is nothing we wouldn't expect: the loss of the optimizer neural net is simply the average training loss of the optimizee as it is trained by the optimizer. The optimizer takes in the gradient of the current coordinate of the optimizee as well as its previous state, and outputs a suggested update that we hope will reduce the optimizee's loss as fast as possible.
 
 Optimization is done coordinatewise such that to optimize each parameter by its own state. Any momentum or energy term used in the optimization is based on each parameter's own history, independent on others. Each parameter's optimization state is not shared across other coordinates.
-The precondition assumed, is that all parameters share the same weights in a model-based optimizer.
 
 In our approach, the role of the optimizer is given to a Hamiltonian Neural Network which is presented in figure below:
 
