@@ -259,9 +259,9 @@ def fit(target_cls, target_to_opt, model_name, preproc=False, unroll=20, \
                                       unroll, optim_it, out_mul, should_train=False)) for _ in range(n_tests)])
             else:
                 one_step_fit_HNN(opt_net, meta_opt, target_cls, target_to_opt,\
-                                 unroll, optim_it, out_mul, should_train=True, norm)
+                                 unroll, optim_it, out_mul, should_train=True, norm=norm)
                 loss = np.mean([np.mean(one_step_fit_HNN(opt_net, meta_opt, target_cls, target_to_opt,\
-                                      unroll, optim_it, out_mul, should_train=False, norm)) for _ in range(n_tests)])
+                                      unroll, optim_it, out_mul, should_train=False, norm=norm)) for _ in range(n_tests)])
         
         if loss < best_loss:
             best_loss = loss
@@ -334,7 +334,7 @@ def find_best_parameters_HNN(target_cls, target_to_opt, preproc=False, norm=True
         print('Trying:', lr, out_mul)
         loss = best_loss + 1.0
         loss = fit(target_cls, target_to_opt, 'HNN', preproc=preproc, unroll=15, optim_it=100,\
-                            n_epochs=20, n_tests=20, lr=lr, out_mul=out_mul, norm)[0]
+                            n_epochs=20, n_tests=20, lr=lr, out_mul=out_mul, norm=norm)[0]
         if loss < best_loss:
             best_loss = loss
             best_lr = lr
