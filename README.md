@@ -42,7 +42,7 @@ The loss of the optimizer is the sum (weights are set to 1 in our experiments) o
 
 <img src="figs/loss.png" width="600" />
 
-The plan is thus to use gradient descent on parameters of model-based optimizers in order to minimize this loss, which should give us an optimizer that is capable of optimizing f efficiently.
+The plan is thus to use gradient descent on parameters of model-based optimizers in order to minimize this loss, which should give us an optimizer that is capable of optimizing efficiently.
 
 As the [paper](https://arxiv.org/pdf/1606.04474.pdf) mentions, it is important that the gradients in dashed lines in the figure below are **not** propagated during gradient descent.
 
