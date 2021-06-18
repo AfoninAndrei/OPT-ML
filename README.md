@@ -40,13 +40,13 @@ pip install requirements.txt
 In fact, gradient descent is fundamentally a **sequence** of updates (from the output layer of the neural net back to the input), in between which a **state** must be stored. Thus we can think of an optimizer as a ODE-Net (or RNN).
 The loss of the optimizer is the sum (weights are set to 1 in our experiments) of the losses of the optimizee as it learns. 
 
-<img src="figs/loss.png" width="400" />
+<img src="figs/loss.png" width="600" />
 
 The plan is thus to use gradient descent on parameters of model-based optimizers in order to minimize this loss, which should give us an optimizer that is capable of optimizing f efficiently.
 
 As the [paper](https://arxiv.org/pdf/1606.04474.pdf) mentions, it is important that the gradients in dashed lines in the figure below are **not** propagated during gradient descent.
 
-<img src="figs/backprop.png" width="400" />
+<img src="figs/backprop.png" width="600" />
 
 Basically this is nothing we wouldn't expect: the loss of the optimizer neural net is simply the average training loss of the optimizee as it is trained by the optimizer. The optimizer takes in the gradient of the current coordinate of the optimizee as well as its previous state, and outputs a suggested update that we hope will reduce the optimizee's loss as fast as possible.
 
@@ -54,6 +54,8 @@ Optimization is done coordinatewise such that to optimize each parameter by its 
 The precondition assumed, is that all parameters share the same weights in a model-based optimizer.
 
 In our approach, the role of the optimizer is given to a Hamiltonian Neural Network which is presented in figure below:
+
+<img src="figs/graph.png" width="600" />
 
 ## Acknowledgement
 * Some parts of the code were taken from here: [chenwydj/learning-to-learn-by-gradient-descent-by-gradient](https://github.com/chenwydj/learning-to-learn-by-gradient-descent-by-gradient-descent).
