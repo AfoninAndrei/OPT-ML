@@ -32,7 +32,7 @@ cd OPT-ML
 pip install requirements.txt
 ```
 ## Usage
-* To reproduce the results: simply go through `main.ipynb`. 
+* To reproduce the results: simply go through `main.ipynb`. Or run it on [Colab](https://colab.research.google.com/drive/1TREA4XwnU2WrxIGyx5XlIGJprtsAoUN_?usp=sharing)
 * All implementations are in `src`.
 
 ## Method

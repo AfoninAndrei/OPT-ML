@@ -115,7 +115,7 @@ def one_step_fit_LSTM(opt_net, meta_opt, target_cls, target_to_opt, \
     return all_losses_ever
 
 def one_step_fit_HNN(opt_net, meta_opt, target_cls, target_to_opt, \
-                     unroll, optim_it, out_mul, should_train=True):
+                     unroll, optim_it, out_mul, should_train=True, norm=True):
     """
     This function is used to train one epoch the optimizee and simultaneously
     update parameters of the HNN-based optimizer
@@ -178,7 +178,10 @@ def one_step_fit_HNN(opt_net, meta_opt, target_cls, target_to_opt, \
             gradients = detach_var(p.grad.view(cur_sz, 1))
             inp = torch.cat((gradients, derivative_input[offset:offset+cur_sz]), dim=-1)
             updates, deriv = opt_net(inp)
-            derivative_input2[offset:offset+cur_sz, 0] = (deriv.view(*p.size())).reshape(-1,)/torch.norm((deriv.view(*p.size())).reshape(-1,))
+            if norm:
+                derivative_input2[offset:offset+cur_sz, 0] = (deriv.view(*p.size())).reshape(-1,)/torch.norm((deriv.view(*p.size())).reshape(-1,))
+            else:
+                derivative_input2[offset:offset+cur_sz, 0] = (deriv.view(*p.size())).reshape(-1,)
             result_params[name] = p + updates.view(*p.size())*out_mul
             result_params[name].retain_grad()
             offset += cur_sz
@@ -205,7 +208,7 @@ def one_step_fit_HNN(opt_net, meta_opt, target_cls, target_to_opt, \
 
 
 def fit(target_cls, target_to_opt, model_name, preproc=False, unroll=20, \
-        optim_it=100, n_epochs=20, n_tests=100, lr=0.001, out_mul=1.0):
+        optim_it=100, n_epochs=20, n_tests=100, lr=0.001, out_mul=1.0, norm=True):
     """
     This function is used to train the model-based optimizers
     Parameters:
@@ -256,9 +259,9 @@ def fit(target_cls, target_to_opt, model_name, preproc=False, unroll=20, \
                                       unroll, optim_it, out_mul, should_train=False)) for _ in range(n_tests)])
             else:
                 one_step_fit_HNN(opt_net, meta_opt, target_cls, target_to_opt,\
-                                 unroll, optim_it, out_mul, should_train=True)
+                                 unroll, optim_it, out_mul, should_train=True, norm)
                 loss = np.mean([np.mean(one_step_fit_HNN(opt_net, meta_opt, target_cls, target_to_opt,\
-                                      unroll, optim_it, out_mul, should_train=False)) for _ in range(n_tests)])
+                                      unroll, optim_it, out_mul, should_train=False, norm)) for _ in range(n_tests)])
         
         if loss < best_loss:
             best_loss = loss
@@ -300,7 +303,7 @@ def fit_normal(target_cls, target_to_opt, opt_class, lr, n_tests=100, n_epochs=1
         results.append(total_loss)
     return results
 
-def find_best_parameters_HNN(target_cls, target_to_opt, preproc=False):
+def find_best_parameters_HNN(target_cls, target_to_opt, preproc=False, norm=True):
     """
     This function is used to search for the best learning rate and out_mul 
     parameters of HNN optimizer. The search for each combination of parameters 
@@ -331,7 +334,7 @@ def find_best_parameters_HNN(target_cls, target_to_opt, preproc=False):
         print('Trying:', lr, out_mul)
         loss = best_loss + 1.0
         loss = fit(target_cls, target_to_opt, 'HNN', preproc=preproc, unroll=15, optim_it=100,\
-                            n_epochs=20, n_tests=20, lr=lr, out_mul=out_mul)[0]
+                            n_epochs=20, n_tests=20, lr=lr, out_mul=out_mul, norm)[0]
         if loss < best_loss:
             best_loss = loss
             best_lr = lr
